@@ -6,10 +6,20 @@ import arrowLeftImg from '../../assets/arrowLeftBlack.png';
 import good from '../../assets/good.png';
 import addBtn from '../../assets/add.png';
 import { statusBarHeight } from '../../constants/Layout.constant';
+import { RouteProp } from '@react-navigation/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { setEatingAction } from '../../reducers/EatingTimes/EatingTimes.reducer';
+import { TStore } from '../../store';
 interface IGoodScreenProps {
     navigation: StackNavigationProp<TRootStackParamList, 'Good'>;
+    route: RouteProp<TRootStackParamList, 'Good'>;
 }
-export const GoodScreen: React.FC<IGoodScreenProps> = ({ navigation }) => {
+export const GoodScreen: React.FC<IGoodScreenProps> = ({
+    navigation,
+    route,
+}) => {
+    const state = useSelector((state: TStore) => state);
+    const dispatch = useDispatch();
     return (
         <View
             style={{
@@ -40,7 +50,7 @@ export const GoodScreen: React.FC<IGoodScreenProps> = ({ navigation }) => {
                         paddingTop: 24,
                     }}
                 >
-                    Sandwich with cabbage
+                    {route.params.name}
                 </Text>
                 <View style={{ paddingTop: 24, flexDirection: 'row' }}>
                     <View
@@ -117,14 +127,14 @@ export const GoodScreen: React.FC<IGoodScreenProps> = ({ navigation }) => {
                                 fontSize: 14,
                             }}
                         >
-                            Corbs
+                            kcal
                         </Text>
                         <Text
                             style={{
                                 fontSize: 14,
                             }}
                         >
-                            42g
+                            {route.params.kcal}
                         </Text>
                     </View>
                 </View>
@@ -143,34 +153,49 @@ export const GoodScreen: React.FC<IGoodScreenProps> = ({ navigation }) => {
                         fontSize: 12,
                     }}
                 >
-                    Restaraunt and cafe which have this dish in your city
+                    {route.params.desc}
                 </Text>
-
-                <View
-                    style={{
-                        paddingTop: 16,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                >
+                {route.params.restorants.map((item) => (
                     <View
+                        key={item}
                         style={{
-                            borderWidth: 1,
-                            borderRadius: 16,
-                            width: 16,
-                            height: 16,
-                        }}
-                    ></View>
-                    <Text
-                        style={{
-                            paddingLeft: 8,
+                            paddingTop: 16,
+                            flexDirection: 'row',
+                            alignItems: 'center',
                         }}
                     >
-                        Percini
-                    </Text>
-                </View>
+                        <View
+                            style={{
+                                borderWidth: 1,
+                                borderRadius: 16,
+                                width: 16,
+                                height: 16,
+                            }}
+                        ></View>
+                        <Text
+                            style={{
+                                paddingLeft: 8,
+                            }}
+                        >
+                            {item}
+                        </Text>
+                    </View>
+                ))}
             </ScrollView>
-            <TouchableOpacity>
+            <TouchableOpacity
+                onPress={() => {
+                    dispatch(
+                        setEatingAction({
+                            field: state.EatingTimesReducer.currentEating,
+                            value:
+                                state.EatingTimesReducer.eatings[
+                                    state.EatingTimesReducer.currentEating
+                                ].kcal + route.params.kcal,
+                        })
+                    );
+                    navigation.navigate('Diary');
+                }}
+            >
                 <Image
                     source={addBtn}
                     style={{

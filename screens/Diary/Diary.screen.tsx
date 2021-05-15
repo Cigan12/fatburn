@@ -18,11 +18,16 @@ import Breakfast from '../../assets/Breakfast.png';
 import Dinner from '../../assets/Dinner.png';
 import Supper from '../../assets/Suppper.png';
 import Snack from '../../assets/Snack.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { TStore } from '../../store';
+import { setCurrentEatingAction } from '../../reducers/EatingTimes/EatingTimes.reducer';
 
 interface IDiaryScreenProps {
     navigation: StackNavigationProp<TRootStackParamList, 'Diary'>;
 }
 export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
+    const state = useSelector((state: TStore) => state);
+    const dispatch = useDispatch();
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <HeaderLargeComponent
@@ -78,7 +83,12 @@ export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
                                             fontSize: 16,
                                         }}
                                     >
-                                        850
+                                        {Object.values(
+                                            state.EatingTimesReducer.eatings
+                                        ).reduce(
+                                            (acc, item) => acc + item.kcal,
+                                            0
+                                        )}
                                     </Text>
                                     <Text
                                         style={{
@@ -151,7 +161,9 @@ export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
                                         fontSize: 16,
                                     }}
                                 >
-                                    850
+                                    {Object.values(
+                                        state.EatingTimesReducer.eatings
+                                    ).reduce((acc, item) => acc + item.kcal, 0)}
                                 </Text>
                                 <Text
                                     style={{
@@ -251,37 +263,43 @@ export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
                     }}
                 >
                     <EatItem
-                        calories="512"
+                        calories={
+                            state.EatingTimesReducer.eatings.breakfast.kcal
+                        }
                         source={Breakfast}
                         title="Breakfast"
                         onAdd={() => {
+                            dispatch(setCurrentEatingAction('breakfast'));
                             navigation.navigate('Search');
                         }}
                     />
                     <EatItem
                         style={{ marginTop: 24 }}
-                        calories="512"
+                        calories={state.EatingTimesReducer.eatings.dinner.kcal}
                         source={Dinner}
                         title="Dinner"
                         onAdd={() => {
+                            dispatch(setCurrentEatingAction('dinner'));
                             navigation.navigate('Search');
                         }}
                     />
                     <EatItem
                         style={{ marginTop: 24 }}
-                        calories="512"
+                        calories={state.EatingTimesReducer.eatings.supper.kcal}
                         source={Supper}
                         title="Supper"
                         onAdd={() => {
+                            dispatch(setCurrentEatingAction('supper'));
                             navigation.navigate('Search');
                         }}
                     />
                     <EatItem
                         style={{ marginTop: 24 }}
-                        calories="512"
+                        calories={state.EatingTimesReducer.eatings.snack.kcal}
                         source={Snack}
                         title="Snack"
                         onAdd={() => {
+                            dispatch(setCurrentEatingAction('snack'));
                             navigation.navigate('Search');
                         }}
                     />
@@ -293,7 +311,7 @@ export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
 
 const EatItem: React.FC<{
     title: string;
-    calories: string;
+    calories: number;
     source: ImageSourcePropType;
     onAdd?: () => void;
     style?: StyleProp<ViewStyle>;
