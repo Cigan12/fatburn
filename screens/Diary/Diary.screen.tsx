@@ -25,8 +25,10 @@ import { setCurrentEatingAction } from '../../reducers/EatingTimes/EatingTimes.r
 interface IDiaryScreenProps {
     navigation: StackNavigationProp<TRootStackParamList, 'Diary'>;
 }
+
 export const DiaryScreen: React.FC<IDiaryScreenProps> = ({ navigation }) => {
     const state = useSelector((state: TStore) => state);
+
     const dispatch = useDispatch();
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>

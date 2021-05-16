@@ -1,7 +1,6 @@
 import React from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Dimensions, Image, ImageBackground, Text, View } from 'react-native';
-import { SSignIn } from './SignIn.styles';
 import { TRootStackParamList } from '../../types/Navigation.types';
 import Logo from '../../assets/FatBurnLogoWhite.png';
 import Bg from '../../assets/Bg.png';
